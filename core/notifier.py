@@ -1,6 +1,7 @@
-"""消息推送：当前实现 Server 酱（sct.ftqq.com）"""
+"""消息推送：Server 酱（sct.ftqq.com）/ SMTP 邮件"""
 import json
 import logging
+import os
 import urllib.parse
 import urllib.request
 from typing import Optional
@@ -55,10 +56,57 @@ class ServerChanNotifier:
             return False
 
 
+class EmailNotifier:
+    """SMTP 邮件推送（126/163 等国内邮箱，465 隐式 TLS）。"""
+
+    def __init__(self, user: str, password: str, to: str,
+                 logger: logging.Logger,
+                 smtp_host: str = "smtp.126.com", smtp_port: int = 465):
+        self.user = (user or "").strip()
+        self.password = (password or "").strip()
+        self.to = (to or self.user).strip()
+        self.logger = logger
+        self.smtp_host = smtp_host
+        self.smtp_port = smtp_port
+
+    def send(self, title: str, desp: str = "") -> bool:
+        import base64
+        import smtplib
+        from email.header import Header
+        from email.mime.text import MIMEText
+        if not (self.user and self.password):
+            self.logger.debug("邮件配置不全（user/password），跳过推送")
+            return False
+        try:
+            msg = MIMEText(desp or title, "plain", "utf-8")
+            nick = base64.b64encode("机票监控".encode()).decode()
+            msg["From"] = f"=?utf-8?B?{nick}?= <{self.user}>"
+            msg["To"] = self.to
+            msg["Subject"] = Header(title[:60], "utf-8")
+            with smtplib.SMTP_SSL(self.smtp_host, self.smtp_port, timeout=25) as s:
+                s.login(self.user, self.password)
+                s.sendmail(self.user, [self.to], msg.as_string())
+            self.logger.info("邮件推送成功: %s", title)
+            return True
+        except Exception as e:
+            self.logger.warning("邮件推送异常: %s", e)
+            return False
+
+
 def build_notifier(cfg: dict, logger: logging.Logger):
     """根据 notifier 配置块构造推送器；未配置则返回 None"""
     if not cfg:
         return None
+    em = (cfg.get("email") or {})
+    if em.get("enabled") and em.get("user") and (em.get("password") or os.environ.get("MAIL_PASS")):
+        return EmailNotifier(
+            user=em["user"],
+            password=em.get("password") or os.environ.get("MAIL_PASS", ""),
+            to=em.get("to") or em["user"],
+            logger=logger,
+            smtp_host=em.get("smtp_host") or "smtp.126.com",
+            smtp_port=int(em.get("smtp_port") or 465),
+        )
     sc = (cfg.get("serverchan") or {})
     if sc.get("enabled") and sc.get("send_key"):
         return ServerChanNotifier(

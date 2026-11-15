@@ -14,6 +14,9 @@ def main():
     ap.add_argument("--platforms", default="fliggy,tuniu,qunar,tongcheng")
     ap.add_argument("--threshold", type=int, default=0)
     ap.add_argument("--serverchan-key", default="")
+    ap.add_argument("--mail-user", default="")
+    ap.add_argument("--mail-to", default="")
+    ap.add_argument("--mail-pass", default="")
     ap.add_argument("--output", default="config.yaml")
     args = ap.parse_args()
 
@@ -71,6 +74,13 @@ def main():
         "notifier:",
         "  push_drop_min: 30",
         "  push_rise_min: 50",
+        "  email:",
+        f"    enabled: {'true' if args.mail_user else 'false'}",
+        f'    user: "{args.mail_user}"',
+        f'    to: "{args.mail_to or args.mail_user}"',
+        f'    password: "{args.mail_pass}"',
+        '    smtp_host: "smtp.126.com"',
+        "    smtp_port: 465",
         "  serverchan:",
         f"    enabled: {'true' if args.serverchan_key else 'false'}",
         f'    send_key: "{args.serverchan_key}"',

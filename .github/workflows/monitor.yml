@@ -2,34 +2,34 @@ name: Flight Price Monitor
 
 on:
   schedule:
-    # 每天 01:00 / 07:00 / 13:00 / 19:00 UTC（北京时间 09/15/21/03 点）
-    - cron: '0 1,7,13,19 * * *'
+    # 每小时整点运行（UTC，即北京时间每小时整点）
+    - cron: '0 * * * *'
   workflow_dispatch:
     inputs:
       from_code:
-        description: '出发地三字码 (如 LZO)'
+        description: '出发地三字码 (如 WUX)'
         required: true
-        default: 'LZO'
+        default: 'WUX'
       from_name:
-        description: '出发地名称 (如 泸州)'
+        description: '出发地名称 (如 无锡)'
         required: true
-        default: '泸州'
+        default: '无锡'
       to_code:
-        description: '目的地三字码 (如 BJS)'
+        description: '目的地三字码 (如 KMG)'
         required: true
-        default: 'BJS'
+        default: 'KMG'
       to_name:
-        description: '目的地名称 (如 北京)'
+        description: '目的地名称 (如 昆明)'
         required: true
-        default: '北京'
+        default: '昆明'
       depart_dates:
-        description: '去程日期, 逗号分隔 (如 2026-09-30,2026-10-01)'
+        description: '去程日期, 逗号分隔 (如 2026-11-25,2026-12-01)'
         required: true
-        default: '2026-09-30,2026-10-01,2026-10-02'
+        default: '2026-11-25,2026-12-01'
       return_dates:
         description: '回程日期, 逗号分隔 (可选)'
         required: false
-        default: '2026-10-06'
+        default: ''
       platforms:
         description: '平台: fliggy,tuniu,qunar,tongcheng,ctrip'
         required: false
@@ -37,7 +37,7 @@ on:
       threshold:
         description: '低价提醒阈值（元）'
         required: false
-        default: '0'
+        default: '600'
 
 permissions:
   contents: write
@@ -65,15 +65,18 @@ jobs:
       - name: Build config from workflow_dispatch or defaults
         run: |
           python scripts/build_config.py \
-            --from-code "${{ github.event.inputs.from_code || 'LZO' }}" \
-            --from-name "${{ github.event.inputs.from_name || '泸州' }}" \
-            --to-code "${{ github.event.inputs.to_code || 'BJS' }}" \
-            --to-name "${{ github.event.inputs.to_name || '北京' }}" \
-            --dates "${{ github.event.inputs.depart_dates || '2026-09-30,2026-10-01,2026-10-02' }}" \
+            --from-code "${{ github.event.inputs.from_code || 'WUX' }}" \
+            --from-name "${{ github.event.inputs.from_name || '无锡' }}" \
+            --to-code "${{ github.event.inputs.to_code || 'KMG' }}" \
+            --to-name "${{ github.event.inputs.to_name || '昆明' }}" \
+            --dates "${{ github.event.inputs.depart_dates || '2026-11-25,2026-12-01' }}" \
             --return-dates "${{ github.event.inputs.return_dates || '2026-10-06' }}" \
             --platforms "${{ github.event.inputs.platforms || 'fliggy,tuniu,qunar,tongcheng' }}" \
             --threshold "${{ github.event.inputs.threshold || '0' }}" \
             --serverchan-key "${{ secrets.SERVERCHAN_KEY }}" \
+            --mail-user "w662000@126.com" \
+            --mail-to "w662000@126.com" \
+            --mail-pass "${{ secrets.MAIL_PASS }}" \
             --output config.yaml
 
       - name: Run price monitor (one round)
