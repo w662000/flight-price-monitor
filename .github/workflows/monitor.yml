@@ -70,9 +70,9 @@ jobs:
             --to-code "${{ github.event.inputs.to_code || 'KMG' }}" \
             --to-name "${{ github.event.inputs.to_name || '昆明' }}" \
             --dates "${{ github.event.inputs.depart_dates || '2026-11-25,2026-12-01' }}" \
-            --return-dates "${{ github.event.inputs.return_dates || '2026-10-06' }}" \
+            --return-dates "${{ github.event.inputs.return_dates || '' }}" \
             --platforms "${{ github.event.inputs.platforms || 'fliggy,tuniu,qunar,tongcheng' }}" \
-            --threshold "${{ github.event.inputs.threshold || '0' }}" \
+            --threshold "${{ github.event.inputs.threshold || '600' }}" \
             --serverchan-key "${{ secrets.SERVERCHAN_KEY }}" \
             --mail-user "w662000@126.com" \
             --mail-to "w662000@126.com" \
@@ -100,6 +100,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/
+          git add -f docs/data/
           git diff --staged --quiet || git commit -m "chore: update price data $(date -u '+%Y-%m-%d %H:%M UTC')"
           git push
