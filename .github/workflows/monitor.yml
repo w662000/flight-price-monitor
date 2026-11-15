@@ -47,6 +47,8 @@ permissions:
 jobs:
   monitor:
     runs-on: ubuntu-latest
+    env:
+      MAIL_PASS: ${{ secrets.MAIL_PASS }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -64,7 +66,10 @@ jobs:
 
       - name: Build config from workflow_dispatch or defaults
         run: |
-          python scripts/build_config.py \
+          if [ -f config.yaml ]; then
+            echo "使用面板维护的 config.yaml（出行监控面板自动下发）"
+          else
+            python scripts/build_config.py \
             --from-code "${{ github.event.inputs.from_code || 'WUX' }}" \
             --from-name "${{ github.event.inputs.from_name || '无锡' }}" \
             --to-code "${{ github.event.inputs.to_code || 'KMG' }}" \
@@ -78,10 +83,11 @@ jobs:
             --mail-to "w662000@126.com" \
             --mail-pass "${{ secrets.MAIL_PASS }}" \
             --output config.yaml
+          fi
 
       - name: Run price monitor (one round)
         run: python main.py --once
-        timeout-minutes: 15
+        timeout-minutes: 45
 
       - name: Export latest results to JSON
         run: |
