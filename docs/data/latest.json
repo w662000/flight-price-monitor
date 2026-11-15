@@ -1,0 +1,118 @@
+{
+  "ok": true,
+  "data": {
+    "query": {
+      "from": {
+        "code": "WUX",
+        "name": "WUX"
+      },
+      "to": {
+        "code": "KMG",
+        "name": "KMG"
+      },
+      "depart_dates": [
+        "2026-11-25",
+        "2026-12-01"
+      ],
+      "return_dates": [],
+      "platforms": [
+        "qunar",
+        "tongcheng"
+      ],
+      "threshold": 0,
+      "query_time": "2026-11-15 12:33:40"
+    },
+    "results": [
+      {
+        "platform": "qunar",
+        "from": "WUX",
+        "to": "KMG",
+        "date": "2026-12-01",
+        "price": 470.0,
+        "airline": "",
+        "flight_no": "",
+        "depart_time": "",
+        "arrive_time": "",
+        "fetched_at": "2026-11-15 12:32:52"
+      },
+      {
+        "platform": "tongcheng",
+        "from": "WUX",
+        "to": "KMG",
+        "date": "2026-11-25",
+        "price": 480.0,
+        "airline": "",
+        "flight_no": "",
+        "depart_time": "",
+        "arrive_time": "",
+        "fetched_at": "2026-11-15 12:33:20"
+      },
+      {
+        "platform": "tongcheng",
+        "from": "WUX",
+        "to": "KMG",
+        "date": "2026-12-01",
+        "price": 470.0,
+        "airline": "",
+        "flight_no": "",
+        "depart_time": "",
+        "arrive_time": "",
+        "fetched_at": "2026-11-15 12:33:40"
+      }
+    ],
+    "summary": [
+      {
+        "from": "WUX",
+        "to": "KMG",
+        "date": "2026-11-25",
+        "per_platform": {
+          "tongcheng": 480.0
+        },
+        "min_price": 480.0,
+        "best_platform": "tongcheng",
+        "best_flight": "",
+        "best_depart_time": "",
+        "best_arrive_time": ""
+      },
+      {
+        "from": "WUX",
+        "to": "KMG",
+        "date": "2026-12-01",
+        "per_platform": {
+          "qunar": 470.0,
+          "tongcheng": 470.0
+        },
+        "min_price": 470.0,
+        "best_platform": "qunar",
+        "best_flight": "",
+        "best_depart_time": "",
+        "best_arrive_time": ""
+      }
+    ],
+    "trend": {
+      "2026-12-01": {
+        "qunar": [
+          {
+            "t": "2026-11-15 12:32:52",
+            "v": 470.0
+          }
+        ],
+        "tongcheng": [
+          {
+            "t": "2026-11-15 12:33:40",
+            "v": 470.0
+          }
+        ]
+      },
+      "2026-11-25": {
+        "tongcheng": [
+          {
+            "t": "2026-11-15 12:33:20",
+            "v": 480.0
+          }
+        ]
+      }
+    },
+    "generated_at": "2026-11-15T12:34:01.270979Z"
+  }
+}
