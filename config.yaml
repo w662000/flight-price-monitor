@@ -1,0 +1,41 @@
+routes:
+  {}
+
+platforms:
+  - fliggy
+  - tuniu
+
+schedule:
+  interval_minutes: 999
+  jitter_minutes: 0
+  run_on_start: true
+
+crawler:
+  headless: true
+  timeout_seconds: 30
+  delay_min: 2
+  delay_max: 6
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+  mobile_user_agent: ""
+  debug: false
+  debug_dir: debug
+  user_data_dir: user_data
+
+output:
+  db_path: data/prices.db
+  log_path: logs/monitor.log
+
+notifier:
+  push_drop_min: 30
+  push_rise_min: 50
+  email:
+    enabled: true
+    user: "w662000@126.com"
+    to: "w662000@126.com"
+    password: ""
+    smtp_host: "smtp.126.com"
+    smtp_port: 465
+  serverchan:
+    enabled: false
+    send_key: ""
+    channel: ""
